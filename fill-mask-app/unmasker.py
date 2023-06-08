@@ -1,23 +1,82 @@
 #!/usr/bin/env python3
 
+import sys, os
 from transformers import pipeline
 
-def unmasker_fun(input_sentence: str) -> list:
+def unmasker_fun(input_sentence: str, num_results: int) -> list:
     '''
-    Write up here
-    
-    '''
+    Uses the pipeline function to apply the 'fill-mask' ML model from Hugging Face to a sentence
 
-    model_id = "bert-large-uncased-whole-word-masking"
+    Args:
+        input_sentance (str):   The input sentance with the <mask> word in it. 
+        num_results (int):      The number of returns (word predictions)
+
+    Output:
+        unmasked_results (list):    A list (of size num_results) of dictionaries containting the fill-mask output
+    '''
+    try:
+        int(num_results)
+    except Exception as e:
+        return f'Error: {e}'
+
     unmasker = pipeline('fill-mask', model='distilroberta-base')
-    return unmasker(input_sentence, top_k = 5)
 
+    try:
+        unmasked_results = unmasker(input_sentence, top_k = int(num_results))
+    except Exception as e:
+        return e
+
+    return unmasked_results
+
+def write_to_file(input_string, filename):
+    '''
+    Writes a string into a file
+
+    Args:
+        input_string:   The string to be written to a file
+        filename:       The destiantion file path for the string
+
+    Returns:
+        None
+    '''
+
+    try:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, 'w') as file:
+            file.write(input_string)
+        print("Output written to", filename)
+    except IOError:
+        print("Error writing to file", filename)
+
+    return None
 
 def main():
-    input_sentence = input('\nPlease input a sentance with a word to be masked with the format "<mask>":\n(Example: "The <mask> barked at me")\n')
-    print('\n')
-    print(*unmasker_fun(input_sentence), sep="\n")
-    print('\n')
+
+    # destination for output file
+    directory = "TapisOutput"
+    filename = os.path.join(directory, "output.txt")
+
+    # Confirming proper inputs
+    try:
+        input_string = sys.argv[1]
+        num_results = sys.argv[2]
+    except Exception as e:
+        write_to_file(f'{e}\nNeed proper CLI inputs: <input_string> and <num_results>\n', filename)
+        return
+
+    # running fill-mask on inputs
+    unmasked_output = unmasker_fun(input_string, num_results)
+
+    # writing output to file
+    if type(unmasked_output) == list:
+        output_string = ""
+        for result in unmasker_fun(input_string, num_results):
+            output_string += str(result) + '\n'
+    else:
+        output_string = str(unmasker_fun(input_string, num_results)) + '\n'
+    
+    write_to_file(output_string, filename)
+    return None
 
 if __name__ == "__main__":
     main()
