@@ -24,7 +24,7 @@ def unmasker_fun(input_sentence: str, num_results: int) -> list:
     try:
         unmasked_results = unmasker(input_sentence, top_k = int(num_results))
     except Exception as e:
-        return e
+        return f'Error: {e}'
 
     return unmasked_results
 
@@ -48,7 +48,6 @@ def write_to_file(input_string, filename):
     except IOError:
         print("Error writing to file", filename)
 
-    return None
 
 def main():
 
