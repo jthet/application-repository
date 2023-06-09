@@ -3,6 +3,7 @@
 import sys, os
 from transformers import pipeline
 
+
 def unmasker_fun(input_sentence: str, num_results: int) -> list:
     '''
     Uses the pipeline function to apply the 'fill-mask' ML model from Hugging Face to a sentence
@@ -14,6 +15,7 @@ def unmasker_fun(input_sentence: str, num_results: int) -> list:
     Output:
         unmasked_results (list):    A list (of size num_results) of dictionaries containting the fill-mask output
     '''
+    
     try:
         int(num_results)
     except Exception as e:
@@ -24,11 +26,11 @@ def unmasker_fun(input_sentence: str, num_results: int) -> list:
     try:
         unmasked_results = unmasker(input_sentence, top_k = int(num_results))
     except Exception as e:
-        return f'Error: {e}'
+        return e
 
     return unmasked_results
 
-def write_to_file(input_string, filename):
+def write_to_file(output_string, filename):
     '''
     Writes a string into a file
 
@@ -43,11 +45,10 @@ def write_to_file(input_string, filename):
     try:
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as file:
-            file.write(input_string)
+            file.write(output_string)
         print("Output written to", filename)
     except IOError:
         print("Error writing to file", filename)
-
 
 def main():
 
@@ -75,7 +76,11 @@ def main():
         output_string = str(unmasker_fun(input_string, num_results)) + '\n'
     
     write_to_file(output_string, filename)
-    return None
+
+    with open(filename, 'r') as file:
+            print(file.read())
+
+
 
 if __name__ == "__main__":
     main()
