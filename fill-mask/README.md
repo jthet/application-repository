@@ -11,7 +11,8 @@ This directory contains the `app.json` file to define the application using the 
 
 The `job.json` defines the jobs definition to be submitted to the HPC cluster through a client. 
 
-The `job.json` file takes in two arguments; the sentance with the masked word and the number of outputs. 
+The `job.json` file takes in two required arguments; the sentance with the masked word and the number of outputs. 
+    Optionally, a third argument denoting the model top be used. If the argument is ommited, the default model is "distilroberta-base". 
 
 For example, the following arguments:
 ```
@@ -27,6 +28,9 @@ For example, the following arguments:
             },
             {
                 "arg": "2"
+            },
+            {
+                "arg": "distilroberta-base"
             }
         ]
     }
