@@ -1,31 +1,24 @@
 {
-  "name": "MsPASS-1.0",
-  "description": "MsPASS Containerized; currently supports running a MsPASS Jupyter Notebook on Frontera",
-  "appId": "MsPASS",
+  "name": "specufex-1.0",
+  "description": "Specufex containerized; Runs jupyter nb",
+  "appId": "specufex",
   "appVersion": "1.0",
   "archiveOnAppError": false,
   "nodeCount": 4,
   "coresPerNode": 1,
   "jobType": "BATCH",
   "memoryMB": 4000,
-  "maxMinutes": 45,
+  "maxMinutes": 60,
   "isMpi": false,
   "fileInputs": [],
   "fileInputArrays": [],
   "parameterSet": {
-    "appArgs": [
-      {
-        "arg": "/usr/sbin/tini -s -g -- /usr/sbin/start-mspass-tacc.sh",
-        "description": "Running startup script for Jupyter nb",
-        "include": true,
-        "name": "Run ipynb startup script"
-      }
-    ],
+    "appArgs": [],
     "containerArgs": [],
     "schedulerOptions": [
       {
         "name": "allocation",
-        "description": "my allocation",
+        "description": "allocation",
         "include": true,
         "arg": ""
       }
@@ -38,7 +31,10 @@
     "envVariables": [
       {
         "key": "TERM",
-        "value": "xterm-256color"
+        "value": "xterm-256color",
+        "description": "",
+        "inputMode": "INCLUDE_BY_DEFAULT",
+        "notes": {}
       }
     ]
   }
